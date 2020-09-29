@@ -1,0 +1,28 @@
+{
+    "name": "@cotars/cli",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT",
+    "scripts": {
+        "console:dev": "ts-node -r tsconfig-paths/register src/main.ts",
+        "console": "node dist/console.js"
+    },
+    "dependencies": {
+        "@grpc/grpc-js": "^1.1.7",
+        "@grpc/proto-loader": "^0.5.5",
+        "@nestjs/common": "^7.4.4",
+        "@nestjs/core": "^7.4.4",
+        "@nestjs/microservices": "^7.4.4",
+        "@nestjs/platform-express": "^7.4.4",
+        "@types/lodash": "^4.14.161",
+        "lodash": "^4.17.20",
+        "protobufjs": "^6.10.1",
+        "reflect-metadata": "^0.1.13",
+        "rxjs": "^6.6.3"
+    },
+    "devDependencies": {
+        "@types/node": "^13.9.1",
+        "tsconfig-paths": "^3.9.0",
+        "typescript": "^3.7.4"
+    }
+}
