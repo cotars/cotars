@@ -1,5 +1,7 @@
 import { AppModule } from './app.module';
 import { protoJSON } from './grpc-test';
+import { GRPC_NODE_SERVICES } from './packages/service-grpc/constants';
+import { GRPCNodeService } from './packages/service-grpc/grpc-node.service';
 import { ClientGrpc, JSONLoader, ServerGRPC } from '@cotars/grpc';
 import { NestFactory } from '@nestjs/core';
 import { CustomStrategy } from '@nestjs/microservices';
@@ -7,20 +9,16 @@ import { CustomStrategy } from '@nestjs/microservices';
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     app.enableShutdownHooks();
-    app.init();
+    const grpcServices = app.get<GRPCNodeService[]>(GRPC_NODE_SERVICES);
+
     app.connectMicroservice<CustomStrategy>({
         strategy: new ServerGRPC({
-            package: 'com.cotars.accounts',
-            loader: new JSONLoader(protoJSON)
+            packages: grpcServices.map(v => v.options),
+            bindCallback: (port) => {
+                grpcServices.forEach(v => v.callback(port));
+            }
         })
     })
-
-    const client = new ClientGrpc({
-        package: ['com.cotars.accounts', 'com.cotars.users'],
-        loader: new JSONLoader(protoJSON)
-    })
-    await client.connect();
-    client.getService('com.cotars.users.Test')
     await app.startAllMicroservicesAsync();
 }
 

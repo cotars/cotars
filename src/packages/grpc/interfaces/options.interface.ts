@@ -2,10 +2,7 @@ import { IChannelOptions } from './channel-options.interface';
 import { ILoader } from './loader.interface';
 import * as GRPC from '@grpc/grpc-js';
 
-export interface IGRPCOptions {
-    url?: string;
-    package: string | string[];
-    loader: ILoader;
+export interface IGRPCCommonOptions {
     maxSendMessageLength?: number;
     maxReceiveMessageLength?: number;
     maxMetadataSize?: number;
@@ -21,12 +18,17 @@ export interface IGRPCOptions {
     channelOptions?: IChannelOptions;
 }
 
-export interface IServerGRPCOptions extends IGRPCOptions {
+export interface IServerGRPCOptions extends IGRPCCommonOptions {
+    url?: string;
     credentials?: GRPC.ServerCredentials;
+    packages: {name: string, loader: ILoader}[];
     bindCallback?: (port: number) => void;
 }
 
-export interface IClientGRPCOptions extends IGRPCOptions {
+export interface IClientGRPCOptions extends IGRPCCommonOptions {
+    url?: string;
+    package: string;
+    loader: ILoader;
     credentials?: GRPC.CallCredentials;
 }
 

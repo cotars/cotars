@@ -1,32 +1,30 @@
+import { ILoader } from './interfaces/loader.interface';
 import { IServerGRPCOptions } from './interfaces/options.interface';
 import { deepGetServices } from './utils';
 import { GRPC_PATTERN_TRANSPORT, isFullMethodName, METADATA_SERVICE_PATH } from '@cotars/core';
 import * as GRPC from '@grpc/grpc-js';
 import { isObject } from '@nestjs/common/utils/shared.utils';
+import { CustomTransportStrategy, MessageHandler, Server } from '@nestjs/microservices';
+import { GRPC_DEFAULT_URL } from '@nestjs/microservices/constants';
 import { InvalidGrpcPackageException } from '@nestjs/microservices/errors/invalid-grpc-package.exception';
 import { get } from 'lodash';
 
-import {
-    CustomTransportStrategy,
-    MessageHandler,
-    Server,
-} from '@nestjs/microservices';
-import {
-    GRPC_DEFAULT_URL,
-} from '@nestjs/microservices/constants';
-
 export class ServerGRPC extends Server implements CustomTransportStrategy {
+
     public readonly transportId = GRPC_PATTERN_TRANSPORT;
     protected readonly url: string;
     protected grpcServer: GRPC.Server;
     constructor(protected readonly options: IServerGRPCOptions) {
         super();
         this.grpcServer = new GRPC.Server(options.channelOptions);
-        this.url = this.getOptionsProp(options, 'url') || GRPC_DEFAULT_URL;
+        this.url = this.getOptionsProp(options, 'url', GRPC_DEFAULT_URL);
     }
 
     addHandler(pattern: {method: string, target?: any}, callback: MessageHandler, isEventHandler?: boolean) {
-        if (!isObject(pattern) || pattern.method || !pattern.target) {
+
+        console.log(pattern);
+
+        if (!isObject(pattern) || !pattern.method || !pattern.target) {
             throw new Error('grpc service pattern not support');
         }
         let service = '';
@@ -35,13 +33,15 @@ export class ServerGRPC extends Server implements CustomTransportStrategy {
                 METADATA_SERVICE_PATH,
                 pattern.target.constructor,
             );
+            if (!service) {
+                throw new Error('short method pattern must use decorator(Service(pkg)) ');
+            }
         }
         const methodPattern = `/${service}/${pattern.method}/`;
         return super.addHandler(methodPattern, callback, isEventHandler);
     }
 
     async listen(callback: () => void) {
-        this.bindEvent();
         const port = await this.grpcBindAsync();
         if (this.options.bindCallback) {
             this.options.bindCallback(port);
@@ -50,27 +50,21 @@ export class ServerGRPC extends Server implements CustomTransportStrategy {
         callback();
     }
 
-    protected bindEvent() {
-        const loaded = this.options.loader.getDefinition();
+    addPackage(pkg: string, loader: ILoader) {
+        const loaded = loader.getDefinition();
         const grpcContext = GRPC.loadPackageDefinition(loaded.definition);
-        const packageOption = this.getOptionsProp(this.options, 'package');
-        const packageNames = Array.isArray(packageOption)
-            ? packageOption
-            : [packageOption];
-        for (const packageName of packageNames) {
-            const grpcPkg = get(grpcContext, packageName);
-            if (!grpcPkg) {
-                const invalidPackageError = new InvalidGrpcPackageException();
-                this.logger.error(
-                    invalidPackageError.message,
-                    invalidPackageError.stack,
-                );
-                throw invalidPackageError;
-            }
-            deepGetServices(grpcPkg as GRPC.GrpcObject, packageName).forEach((v) =>
-                this.createService(v.clientRef.service),
+        const grpcPkg = get(grpcContext, pkg);
+        if (!grpcPkg) {
+            const invalidPackageError = new InvalidGrpcPackageException();
+            this.logger.error(
+                invalidPackageError.message,
+                invalidPackageError.stack,
             );
+            throw invalidPackageError;
         }
+        deepGetServices(grpcPkg as GRPC.GrpcObject, pkg).forEach((v) =>
+            this.createService(v.clientRef.service),
+        );
     }
 
     protected getHandlerByMethodDefinition(
