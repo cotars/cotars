@@ -1,8 +1,7 @@
 import { AppModule } from './app.module';
-import { protoJSON } from './grpc-test';
 import { GRPC_NODE_SERVICES } from './packages/service-grpc/constants';
 import { GRPCNodeService } from './packages/service-grpc/grpc-node.service';
-import { ClientGrpc, JSONLoader, ServerGRPC } from '@cotars/grpc';
+import { ServerGRPC } from '@cotars/grpc';
 import { NestFactory } from '@nestjs/core';
 import { CustomStrategy } from '@nestjs/microservices';
 
@@ -13,6 +12,7 @@ async function bootstrap() {
 
     app.connectMicroservice<CustomStrategy>({
         strategy: new ServerGRPC({
+            url: '0.0.0.0:5000',
             packages: grpcServices.map(v => v.options),
             bindCallback: (port) => {
                 grpcServices.forEach(v => v.callback(port));

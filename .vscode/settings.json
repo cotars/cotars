@@ -1,6 +1,0 @@
-{
-    "javascript.preferences.quoteStyle": "single",
-    "javascript.updateImportsOnFileMove.enabled": "always",
-    "typescript.preferences.quoteStyle": "single",
-    "typescript.updateImportsOnFileMove.enabled": "always"
-}
