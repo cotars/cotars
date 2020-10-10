@@ -1,9 +1,9 @@
 import { CONSUL_OPTIONS_PROVIDER, CONSUL_PROVIDER } from './constants';
 import { ConsulService } from './consul.service';
+import { ModuleAsyncOptions } from '@cotars/core';
 import { DynamicModule, Module, Provider } from '@nestjs/common';
 import { DiscoveryModule } from '@nestjs/core';
 import * as Consul from 'consul';
-import { ModuleAsyncOptions } from 'src/packages/common';
 @Module({
     imports: [DiscoveryModule],
     providers: [ConsulService],

@@ -2,7 +2,7 @@ import { ConsulRegistered } from './consul.registered';
 import { AbstractRegistry } from '../abstract.registry';
 import { CheckStatus } from '../enums';
 import { IRegistered, IRegisterService, IServiceNode } from '../interfaces/registry.interface';
-import { retry } from '@cotars/common';
+import { retry } from '@cotars/core';
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import {
     ConsulService,

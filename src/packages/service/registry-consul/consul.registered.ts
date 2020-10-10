@@ -1,5 +1,5 @@
 import { ConsulRegistry } from './consul.registry';
-import { retry } from '@cotars/common';
+import { retry } from '@cotars/core';
 import {
     IRegistered,
     IRegisterService,

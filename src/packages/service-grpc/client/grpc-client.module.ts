@@ -2,8 +2,7 @@ import { GRPCClient } from './grpc-client';
 import { REGISTRY_PROVIDER } from '../../service/constants';
 import { IRegistry } from '../../service/interfaces/registry.interface';
 import { IGRPCServiceOptions } from '../interfaces/grpc.options';
-import { ModuleAsyncOptions } from '@cotars/common';
-import { SERVICE_CLIENT, SERVICE_CLIENT_OPTIONS } from '@cotars/core';
+import { ModuleAsyncOptions, SERVICE_CLIENT, SERVICE_CLIENT_OPTIONS } from '@cotars/core';
 import { DynamicModule, Provider } from '@nestjs/common';
 
 export class GRPCClientModule {

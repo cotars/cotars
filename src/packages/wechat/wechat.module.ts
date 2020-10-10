@@ -1,7 +1,7 @@
 import { CONFIGURE_WECHATS } from './constants';
 import { OAuthService } from './oauth.service';
 import { IWechatConfig } from './wechat-config.interface';
-import { ModuleAsyncOptions } from '@cotars/common';
+import { ModuleAsyncOptions } from '@cotars/core';
 import { DynamicModule, Module } from '@nestjs/common';
 
 const CONFIGURE_WECHATS_ARR = [];

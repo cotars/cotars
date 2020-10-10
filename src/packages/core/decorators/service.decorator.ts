@@ -1,5 +1,5 @@
-import { GRPC_PATTERN_TRANSPORT, METADATA_SERVICE_PATH } from './constants';
-import { isFullServiceName, isMethodName } from './utils/service.util';
+import { GRPC_PATTERN_TRANSPORT, METADATA_SERVICE_PATH } from '../constants';
+import { isFullServiceName, isMethodName } from '../utils/service.util';
 import { applyDecorators, Controller, SetMetadata } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 
