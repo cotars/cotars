@@ -106,10 +106,10 @@ export class DiscoveryService {
         metaKey: MetaKey,
         wrappers: InstanceWrapper[],
     ): DiscoveredComponent<T>[] {
-        return wrappers.map((v) => ({
+        return wrappers.map<DiscoveredComponent>(v => ({
             metadata: this.getComponentMetadata(metaKey, v),
             wrapper: v,
-        }));
+        })).filter((v) => !isUndefined(v.metadata));
     }
 
     getComponentsWithMetadata<T = any>(
@@ -141,21 +141,21 @@ export class DiscoveryService {
             ...item.controllers.values(),
             ...item.providers.values(),
         ]);
-        return flatten(providers);
+        return flatten(providers).filter(v => v.instance);
     }
 
     getProviders(filter?: FilterModule): InstanceWrapper[] {
         const providers = this.getModules(filter).map((item) => [
             ...item.providers.values(),
         ]);
-        return flatten(providers);
+        return flatten(providers).filter(v => v.instance);
     }
 
     getControllers(filter?: FilterModule): InstanceWrapper[] {
         const controllers = this.getModules(filter).map((item) => [
             ...item.controllers.values(),
         ]);
-        return flatten(controllers);
+        return flatten(controllers).filter(v => v.instance);
     }
 
     protected getModules(filter?: FilterModule): Module[] {

@@ -1,7 +1,7 @@
 import { GRPC_NODE_SERVICE_OPTIONS, GRPC_NODE_SERVICES } from './constants';
 import { GRPCNodeService } from './grpc-node.service';
 import { GRPCNodeOptions } from './interfaces/grpc.options';
-import { ModuleAsyncOptions } from '../common';
+import { ModuleAsyncOptions } from '@cotars/core';
 import { DynamicModule, Module } from '@nestjs/common';
 
 const GRPCNodes: GRPCNodeService[] = [];

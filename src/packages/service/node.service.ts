@@ -1,8 +1,6 @@
 import { REGISTRY_PROVIDER } from './constants';
-import { retry } from '../common';
 import { Inject, Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import * as ip from 'ip';
-import { add } from 'lodash';
 import { v4 } from 'uuid';
 import {
     IRegistered,

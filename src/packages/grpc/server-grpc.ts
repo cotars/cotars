@@ -21,9 +21,6 @@ export class ServerGRPC extends Server implements CustomTransportStrategy {
     }
 
     addHandler(pattern: {method: string, target?: any}, callback: MessageHandler, isEventHandler?: boolean) {
-
-        console.log(pattern);
-
         if (!isObject(pattern) || !pattern.method || !pattern.target) {
             throw new Error('grpc service pattern not support');
         }
